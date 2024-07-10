@@ -1,5 +1,5 @@
 services:
-  projectCV:
+  bookstore:
     image: projectcv:1.0.0
     restart: unless-stopped
     build: .
@@ -11,15 +11,18 @@ services:
     container_name: projectcv
     ports:
       - 0.0.0.0:6030:6030
+    depends_on:
+      - db
+
 
   db:
-    image: postgres:15.3-alpine3.18
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - '5432:5432'
+    image: postgres:15
     volumes:
-      - ./db:/var/lib/postgresql/data
-      - ./create-db.sql:/docker-entrypoint-initdb.d/create_database.sql
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=hello_django
+      - POSTGRES_PASSWORD=hello_django
+      - POSTGRES_DB=hello_django_dev
+
+volumes:
+  postgres_data:
